@@ -26,7 +26,7 @@ fun CocktailList(modifier: Modifier, navController: NavController) {
     LaunchedEffect(Unit) {
         CocktailRecipes.init()
         cocktailNames.value =
-            CocktailRecipes.getCocktailNames() // Assuming this returns a Set<String>
+            CocktailRecipes.getCocktailNames()
     }
     LazyColumn(
         modifier = modifier
@@ -36,7 +36,7 @@ fun CocktailList(modifier: Modifier, navController: NavController) {
         itemsIndexed(cocktailNames.value.toList()) { index, cocktailName ->
             Box(
                 modifier = modifier
-                    .background(Color.Red)
+                    .background(Color(0xffedebe4))
                     .clickable {
                         navController.navigate("details/$cocktailName")
                         Log.d("CocktailClicked", "Cocktail clicked: $cocktailName")

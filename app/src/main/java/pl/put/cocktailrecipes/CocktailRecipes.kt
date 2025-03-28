@@ -79,9 +79,7 @@ const val COCKTAIL_URL = "http://www.thecocktaildb.com/api/json/v1/1/search.php?
 
 fun parseToCocktail(cocktailResponse: CocktailResponse): Cocktail {
     val cocktail = Cocktail()
-
     val regex = """(\d+)$""".toRegex()
-
 
     for (property in CocktailResponse::class.memberProperties) {
         val propertyValue = property.get(cocktailResponse)
@@ -100,6 +98,8 @@ fun parseToCocktail(cocktailResponse: CocktailResponse): Cocktail {
             val matchResult = regex.find(property.name)
             val ingNumber = matchResult?.groups?.get(1)?.value?.toInt()
             cocktail.ingredients["Ingredient$ingNumber"]?.measure = propertyValue.toString()
+        } else if (property.name.contains("strInstructions")) {
+            cocktail.instructions = propertyValue.toString()
         }
     }
 
