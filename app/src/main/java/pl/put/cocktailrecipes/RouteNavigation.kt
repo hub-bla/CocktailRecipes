@@ -1,41 +1,55 @@
 package pl.put.cocktailrecipes
 
+import android.os.Parcelable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.compose.material3.adaptive.*
+import androidx.compose.material3.adaptive.layout.*
+import androidx.compose.material3.adaptive.navigation.*
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 
 
+@Parcelize
+class Item(val name: String) : Parcelable
+
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun RouteNavigation() {
-    val routes = object {
-        val Home = object {
-            val route = "home"
-        }
-        val DetailsScreen = object {
-            val route = "details/{cocktailName}"
-            val arg = "cocktailName"
-        }
-    }
-    val navController = rememberNavController()
+    val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
+    val scope = rememberCoroutineScope()
 
-    NavHost(
-        navController = navController,
-        startDestination = routes.Home.route
-    ) {
-        composable(routes.Home.route) {
-            CocktailList(Modifier, navController)
-        }
-        composable(
-            route = routes.DetailsScreen.route,
-            arguments = listOf(navArgument(routes.DetailsScreen.arg) { type = NavType.StringType })
-        ) {backStackEntry ->
-            val cocktailName = backStackEntry.arguments?.getString(routes.DetailsScreen.arg)
-            DetailScreen(cocktailName.toString(), Modifier, navController)
-        }
-    }
+    NavigableListDetailPaneScaffold(
+        navigator = navigator,
+        listPane = {
+            CocktailList(
+                onClick = { item ->
+                    navigator.navigateTo(
+                        pane = ListDetailPaneScaffoldRole.Detail,
+                        content = item
+                    )
+                },
+                modifier = Modifier
+            )
+        },
+        detailPane = {
+            AnimatedPane {
+                navigator.currentDestination?.content?.let { item ->
+                    DetailScreen(
+                        item = item as Item,
+                        navigateBack = {
+                            if (navigator.canNavigateBack()) {
+                                scope.launch { navigator.navigateBack() }
+                            } else {
+                                scope.launch { navigator.navigateTo(ListDetailPaneScaffoldRole.List) }
+                            }
+                        },
+                        modifier = Modifier
 
+                    )
+                }
+            }
+        }
+    )
 }

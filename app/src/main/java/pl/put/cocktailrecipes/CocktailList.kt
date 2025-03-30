@@ -1,10 +1,10 @@
 package pl.put.cocktailrecipes
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -17,35 +17,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+
+
 
 @Composable
-fun CocktailList(modifier: Modifier, navController: NavController) {
+fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier) {
     val cocktailNames = remember { mutableStateOf(setOf<String>()) }
 
     LaunchedEffect(Unit) {
         CocktailRecipes.init()
-        cocktailNames.value =
-            CocktailRecipes.getCocktailNames()
+        cocktailNames.value = CocktailRecipes.getCocktailNames()
     }
+
     LazyColumn(
         modifier = modifier
             .background(Color.LightGray)
             .fillMaxSize()
     ) {
-        itemsIndexed(cocktailNames.value.toList()) { index, cocktailName ->
+        itemsIndexed(cocktailNames.value.toList()) { _, cocktailName ->
+            val item = Item(cocktailName)
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .background(Color(0xffedebe4))
                     .clickable {
-                        navController.navigate("details/$cocktailName")
-                        Log.d("CocktailClicked", "Cocktail clicked: $cocktailName")
+                        onClick(item)
                     }
                     .padding(16.dp)
-                    .fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(cocktailName, modifier = modifier)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(cocktailName, modifier = Modifier)
             }
-
         }
     }
 }
+
+
+
+
+
+
+
+
