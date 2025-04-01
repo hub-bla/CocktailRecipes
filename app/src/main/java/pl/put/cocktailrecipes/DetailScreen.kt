@@ -42,7 +42,7 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
                 .padding(start = 20.dp, end = 20.dp, bottom = 150.dp)
         ) {
             Box(
-                modifier = Modifier
+                modifier
                     .fillMaxWidth()
                     .padding(top = 20.dp, bottom = 20.dp)
             ) {
@@ -60,7 +60,7 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
             }
 
             Column(
-                modifier = Modifier.padding(bottom = 20.dp),
+                modifier = modifier.padding(bottom = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 Text(

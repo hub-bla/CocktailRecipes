@@ -31,13 +31,14 @@ fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier) {
 
     LazyColumn(
         modifier = modifier
-            .background(Color.LightGray)
+            .background(Color(0xffedebe4))
             .fillMaxSize()
+            .padding(top = 20.dp)
     ) {
         itemsIndexed(cocktailNames.value.toList()) { _, cocktailName ->
             val item = Item(cocktailName)
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .background(Color(0xffedebe4))
                     .clickable {
                         onClick(item)
