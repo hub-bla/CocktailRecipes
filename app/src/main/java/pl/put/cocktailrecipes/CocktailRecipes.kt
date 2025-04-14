@@ -70,6 +70,7 @@ data class Ingredient(
 
 data class Cocktail(
     var name: String = "",
+    var thumbImgURL: String = "",
     var instructions: String = "",
     val ingredients: HashMap<String, Ingredient> = HashMap()
 )
@@ -100,6 +101,10 @@ fun parseToCocktail(cocktailResponse: CocktailResponse): Cocktail {
             cocktail.ingredients["Ingredient$ingNumber"]?.measure = propertyValue.toString()
         } else if (property.name.contains("strInstructions")) {
             cocktail.instructions = propertyValue.toString()
+        } else if (property.name.contains("strDrinkThumb")) {
+            cocktail.thumbImgURL = propertyValue.toString()
+        } else if(property.name.contains("strDrink")) {
+            cocktail.name = propertyValue.toString()
         }
     }
 

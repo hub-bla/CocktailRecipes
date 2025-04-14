@@ -62,6 +62,7 @@ dependencies {
     implementation ("org.jetbrains.kotlin:kotlin-reflect:1.8.0")
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.tools.core)
+    implementation(libs.coil.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
