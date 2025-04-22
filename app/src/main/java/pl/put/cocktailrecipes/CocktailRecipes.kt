@@ -55,12 +55,12 @@ data class CocktailResponse(
     val strImageSource: String?,
     val strImageAttribution: String?,
     val strCreativeCommonsConfirmed: String,
-    val dateModified: String
+    val dateModified: String?
 )
 
 @Serializable
 data class CocktailsResponse(
-    val drinks: List<CocktailResponse>
+    val drinks: List<CocktailResponse>?
 )
 
 data class Ingredient(
@@ -72,22 +72,20 @@ data class Cocktail(
     var name: String = "",
     var thumbImgURL: String = "",
     var instructions: String = "",
-    val ingredients: HashMap<String, Ingredient> = HashMap()
+    val ingredients: HashMap<String, Ingredient> = HashMap(),
+    var category: String = ""
 )
 
 
-const val COCKTAIL_URL = "http://www.thecocktaildb.com/api/json/v1/1/search.php?f=a"
+const val COCKTAIL_URL = "http://www.thecocktaildb.com/api/json/v1/1/search.php?f="
 
 fun parseToCocktail(cocktailResponse: CocktailResponse): Cocktail {
     val cocktail = Cocktail()
     val regex = """(\d+)$""".toRegex()
 
     for (property in CocktailResponse::class.memberProperties) {
-        val propertyValue = property.get(cocktailResponse)
 
-        if (propertyValue == null) {
-            continue
-        }
+        val propertyValue = property.get(cocktailResponse) ?: continue
 
         if (property.name.contains("Ingredient")) {
             val matchResult = regex.find(property.name)
@@ -105,6 +103,8 @@ fun parseToCocktail(cocktailResponse: CocktailResponse): Cocktail {
             cocktail.thumbImgURL = propertyValue.toString()
         } else if(property.name.contains("strDrink")) {
             cocktail.name = propertyValue.toString()
+        } else if(property.name.contains("strCategory")){
+            cocktail.category = propertyValue.toString()
         }
     }
 
@@ -125,17 +125,41 @@ object CocktailRecipes {
         }
         isInitialized = true
 
-        val response = client.get(COCKTAIL_URL).bodyAsText()
-        Log.d("response", response)
-        val cocktailsData = json.decodeFromString<CocktailsResponse>(response)
+        for(firstLetter in 'a'..'b'){
+            val response = client.get(COCKTAIL_URL+firstLetter).bodyAsText()
+            Log.d("response", response)
+            val cocktailsData = json.decodeFromString<CocktailsResponse>(response)
 
-        for (cocktailResponse in cocktailsData.drinks) {
-            cocktails[cocktailResponse.strDrink] = parseToCocktail(cocktailResponse)
+            val drinks = cocktailsData.drinks ?: emptyList()
+
+            for (cocktailResponse in drinks) {
+                cocktails[cocktailResponse.strDrink] = parseToCocktail(cocktailResponse)
+            }
         }
+
     }
 
     fun getCocktailNames(): Set<String> {
         return cocktails.keys
+    }
+
+    fun getCocktailNamesByCategory(category: Item): List<String> {
+        return cocktails.values
+            .filter { it.category == category.name }
+            .map { it.name }
+    }
+
+    fun getCategories(): List<String> {
+        return cocktails.values
+            .map { it.category }
+            .toSet()
+            .sorted()
+    }
+
+    fun getCategoryThumbImgURL(category: String): String?{
+        return cocktails.values
+            .firstOrNull { it.category == category }
+            ?.thumbImgURL
     }
 
     fun getCocktailDetails(cocktailName: String): Cocktail {
