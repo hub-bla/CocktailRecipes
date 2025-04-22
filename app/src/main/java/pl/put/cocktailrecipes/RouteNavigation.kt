@@ -14,6 +14,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.LaunchedEffect
+import androidx.window.core.layout.WindowWidthSizeClass
 
 
 @Parcelize
@@ -24,12 +25,12 @@ class Item(val name: String) : Parcelable
 fun RouteNavigation() {
     val navigator = rememberListDetailPaneScaffoldNavigator<Item>()
     val currentPane = remember { mutableStateOf<ThreePaneScaffoldRole?>(null) }
+    val coroutineScope = rememberCoroutineScope()
 
 
     LaunchedEffect(navigator.currentDestination) {
         currentPane.value = navigator.currentDestination?.pane
     }
-
 
     BackHandler(enabled = currentPane.value != null) {
         when (currentPane.value) {
@@ -54,17 +55,18 @@ fun RouteNavigation() {
         value = navigator.scaffoldValue,
 
         listPane = {
-            CategoryList(
-                modifier = Modifier,
 
-                onClick = {
-                    category: Item ->
-                    navigator.navigateTo(
-                        pane = ThreePaneScaffoldRole.Primary,
-                        content = category
-                    )
-                }
-            )
+                CategoryList(
+                    modifier = Modifier,
+                    onClick = { category: Item ->
+                        coroutineScope.launch {
+                            navigator.navigateTo(
+                                pane = ThreePaneScaffoldRole.Primary,
+                                content = category
+                            )
+                        }
+                    }
+                )
         },
 
         detailPane = {
@@ -72,13 +74,15 @@ fun RouteNavigation() {
                 navigator.currentDestination?.content?.let {
                     CocktailList(
                         modifier = Modifier,
-                        category = it,
-                        currentPane = currentPane.value?:ThreePaneScaffoldRole.Secondary,
+                        cocktailName = it,
+                        currentPane = currentPane.value ?: ThreePaneScaffoldRole.Secondary,
                         onClick = { cocktail: Item ->
-                            navigator.navigateTo(
-                                pane = ThreePaneScaffoldRole.Tertiary,
-                                content = cocktail
-                            )
+                            coroutineScope.launch {
+                                navigator.navigateTo(
+                                    pane = ThreePaneScaffoldRole.Tertiary,
+                                    content = cocktail
+                                )
+                            }
                         }
                     )
                 }
@@ -92,10 +96,9 @@ fun RouteNavigation() {
                         item = it,
                         modifier = Modifier,
                         navigateBack = {
-                            navigator.navigateTo(
-                                pane = ThreePaneScaffoldRole.Primary,
-                                content = navigator.currentDestination?.content
-                            )
+                            coroutineScope.launch {
+                                navigator.navigateBack()
+                            }
                         }
                     )
                 }
@@ -103,4 +106,3 @@ fun RouteNavigation() {
         }
     )
 }
-

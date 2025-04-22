@@ -36,19 +36,20 @@ import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
 
 
 @Composable
-fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, category: Item, currentPane: ThreePaneScaffoldRole) {
+fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, cocktailName: Item, currentPane: ThreePaneScaffoldRole) {
 
     val cocktailNames = remember {mutableStateOf(emptyList<String>())}
+    val categoryName = remember { mutableStateOf<String>("") }
 
-    LaunchedEffect(category ) {
-            val isValid = CocktailRecipes.getCocktailNamesByCategory(category).isNotEmpty()
+    LaunchedEffect(cocktailName) {
+        val newCategory = CocktailRecipes.getCocktailDetails(cocktailName.name).category
 
-            if (isValid) {
-                cocktailNames.value = CocktailRecipes.getCocktailNamesByCategory(category)
-            }
+        if (newCategory != categoryName.value) {
+            categoryName.value = newCategory
+            cocktailNames.value = CocktailRecipes.getCocktailNamesByCategory(Item(categoryName.value))
+        }
     }
 
-    //chyba mozna to obejsc podajac name jakiegokolwiek i wyciągając z niego category ale idk
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
@@ -56,15 +57,15 @@ fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, category: Item, cu
             .background(Color(0xffedebe4))
             .fillMaxSize(0.5f),
         contentPadding = PaddingValues(
-            top = 50.dp,    // Padding from top
-            bottom = 50.dp  // Padding from bottom
+            top = 50.dp,
+            bottom = 50.dp
         ),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
 
         Log.d("cocktail", cocktailNames.toString())
-        Log.d("cocktail", category.name)
+        Log.d("cocktail", categoryName.value)
         items(cocktailNames.value) { cocktailName ->
             Log.d("bool", cocktailName)
             CocktailCard(CocktailRecipes.getCocktailDetails(cocktailName), onClick)

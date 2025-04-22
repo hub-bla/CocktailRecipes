@@ -81,7 +81,7 @@ fun CategoryCard(category: String, onClick: (Item) -> Unit) {
             .wrapContentWidth(Alignment.CenterHorizontally)
     ) {
         Card(
-            onClick = { onClick(Item(category))},
+            onClick = { onClick(Item(CocktailRecipes.mapCategoryToDrinkName(Item(category))))},
             modifier = Modifier
                 .fillMaxWidth(0.5f)
         ) {

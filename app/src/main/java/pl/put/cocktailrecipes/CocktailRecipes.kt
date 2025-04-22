@@ -156,6 +156,11 @@ object CocktailRecipes {
             .sorted()
     }
 
+    fun mapCategoryToDrinkName(category: Item): String{
+        return cocktails.values.first { it.category == category.name }.name
+
+    }
+
     fun getCategoryThumbImgURL(category: String): String?{
         return cocktails.values
             .firstOrNull { it.category == category }
