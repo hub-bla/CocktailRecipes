@@ -1,7 +1,6 @@
 package pl.put.cocktailrecipes
 
 import androidx.compose.foundation.background
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +9,12 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -18,38 +23,25 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import android.util.Log
-import androidx.compose.material3.adaptive.layout.ThreePaneScaffoldRole
 
 
 @Composable
-fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, cocktailName: Item, currentPane: ThreePaneScaffoldRole) {
+fun CategoryList(onClick: (Item) -> Unit, modifier: Modifier){
 
-    val cocktailNames = remember {mutableStateOf(emptyList<String>())}
-    val categoryName = remember { mutableStateOf<String>("") }
+    val categories = remember { mutableStateOf(emptyList<String>()) }
 
-    LaunchedEffect(cocktailName) {
-        val newCategory = CocktailRecipes.getCocktailDetails(cocktailName.name).category
-
-        if (newCategory != categoryName.value) {
-            categoryName.value = newCategory
-            cocktailNames.value = CocktailRecipes.getCocktailNamesByCategory(Item(categoryName.value))
-        }
+    LaunchedEffect(Unit) {
+        CocktailRecipes.init()
+        categories.value = CocktailRecipes.getCategories()
     }
-
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
@@ -63,18 +55,25 @@ fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, cocktailName: Item
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+        items(categories.value.toList(), key = { it }) { cocktailCategory ->
+            CategoryCard(cocktailCategory, onClick)
+        }
+    }
 
-        Log.d("cocktail", cocktailNames.toString())
-        Log.d("cocktail", categoryName.value)
-        items(cocktailNames.value) { cocktailName ->
-            Log.d("bool", cocktailName)
-            CocktailCard(CocktailRecipes.getCocktailDetails(cocktailName), onClick)
+    androidx.compose.foundation.lazy.LazyColumn(modifier = modifier) {
+        items(categories.value.size) { index ->
+            val category = categories.value[index]
+            Text(
+                text = category,
+                modifier = Modifier
+                    .padding(16.dp)
+            )
         }
     }
 }
 
 @Composable
-fun CocktailCard(cocktail: Cocktail, onClick: (Item) -> Unit) {
+fun CategoryCard(category: String, onClick: (Item) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -82,20 +81,21 @@ fun CocktailCard(cocktail: Cocktail, onClick: (Item) -> Unit) {
             .wrapContentWidth(Alignment.CenterHorizontally)
     ) {
         Card(
-            onClick = { onClick(Item(cocktail.name)) },
+            onClick = { onClick(Item(CocktailRecipes.mapCategoryToDrinkName(Item(category))))},
             modifier = Modifier
                 .fillMaxWidth(0.5f)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-            ) {
+            )
+            {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(cocktail.thumbImgURL)
+                        .data(CocktailRecipes.getCategoryThumbImgURL(category))
                         .crossfade(true)
                         .build(),
-                    contentDescription = cocktail.name,
+                    contentDescription = category,
                     modifier = Modifier
                         .aspectRatio(1f)
                         .clip(RoundedCornerShape(8.dp))
@@ -109,12 +109,9 @@ fun CocktailCard(cocktail: Cocktail, onClick: (Item) -> Unit) {
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(cocktail.name, modifier = Modifier)
+                    Text(category, modifier = Modifier)
                 }
             }
         }
     }
 }
-
-
-
