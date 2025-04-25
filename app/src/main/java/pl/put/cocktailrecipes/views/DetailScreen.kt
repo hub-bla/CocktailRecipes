@@ -46,7 +46,7 @@ import androidx.compose.ui.graphics.Color
 
 
 @Composable
-fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
+fun DetailScreen(item: Item, modifier: Modifier) {
     val cocktail = CocktailRecipes.getCocktailDetails(item.name)
     val scrollState = rememberScrollState()
     val indent = 20.dp
@@ -60,24 +60,6 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
                 .verticalScroll(scrollState)
                 .padding(start = 20.dp, end = 20.dp, bottom = 150.dp)
         ) {
-            Box(
-                modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp, bottom = 20.dp)
-            ) {
-
-                IconButton(
-                    onClick = {
-                        navigateBack()
-
-                    },
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
-            }
 
             Column(
                 modifier = modifier.padding(bottom = 20.dp),

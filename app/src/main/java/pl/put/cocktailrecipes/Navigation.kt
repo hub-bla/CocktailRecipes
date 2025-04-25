@@ -83,8 +83,7 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
                         val itemToShow = cocktailForDetailPane ?: Item(CocktailRecipes.mapCategoryToDrinkName(Item(categoryName)))
                         DetailScreen(
                             item = itemToShow,
-                            modifier = Modifier.fillMaxSize(),
-                            navigateBack = { cocktailForDetailPane = null }
+                            modifier = Modifier.fillMaxSize()
 
                         )
                     }
@@ -153,16 +152,16 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
                     ) {
                         DetailScreen(
                             item = Item(cocktailName),
-                            modifier = Modifier.fillMaxSize(),
-                            navigateBack = { navController.popBackStack() }
+                            modifier = Modifier.fillMaxSize()
+
                         )
                     }
                 }
             } else {
                 DetailScreen(
                     item = Item(cocktailName),
-                    modifier = Modifier.fillMaxSize(),
-                    navigateBack = { navController.popBackStack() }
+                    modifier = Modifier.fillMaxSize()
+
                 )
             }
         }

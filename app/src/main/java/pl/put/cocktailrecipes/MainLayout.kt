@@ -51,7 +51,7 @@ fun MainLayout() {
         ) {
             Scaffold(
                 topBar = {
-                    TopBar(scope = scope, drawerState = drawerState, modifier = Modifier)
+                    TopBar(scope = scope, drawerState = drawerState, modifier = Modifier, navigateBack = {navController.navigateUp()})
                 }
             ) { innerPadding ->
                 ComposeNavigation(navController = navController, padding = innerPadding)
