@@ -7,6 +7,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -50,7 +51,7 @@ fun MainLayout() {
         ) {
             Scaffold(
                 topBar = {
-                    TopBar(scope = scope, drawerState = drawerState)
+                    TopBar(scope = scope, drawerState = drawerState, modifier = Modifier)
                 }
             ) { innerPadding ->
                 ComposeNavigation(navController = navController, padding = innerPadding)

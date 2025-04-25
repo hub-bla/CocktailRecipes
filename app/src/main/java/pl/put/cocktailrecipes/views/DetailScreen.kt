@@ -19,8 +19,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -44,7 +42,6 @@ import pl.put.cocktailrecipes.api.CocktailRecipes
 import pl.put.cocktailrecipes.models.Item
 import pl.put.cocktailrecipes.utils.SuccessComponent
 import pl.put.cocktailrecipes.utils.TimerComponent
-import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
 
 
