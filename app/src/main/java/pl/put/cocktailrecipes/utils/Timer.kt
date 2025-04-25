@@ -1,24 +1,20 @@
 package pl.put.cocktailrecipes.utils
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
@@ -28,13 +24,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import java.util.Locale
-import java.util.Timer
-import kotlin.concurrent.scheduleAtFixedRate
+
 
 fun formatTime(timeInSec: Int): String {
-    val minutes = timeInSec / 60 // integer division
-
+    val minutes = timeInSec / 60
     return "${String.format(Locale.US, "%02d", minutes)}:${
         String.format(
             Locale.US,
@@ -44,20 +39,20 @@ fun formatTime(timeInSec: Int): String {
     }"
 }
 
+
 @Composable
-fun TimerComponent(modifier: Modifier = Modifier) {
-    var isPlaying by remember { mutableStateOf(false) }
-    var timeInSec by remember { mutableIntStateOf(0) } // handle 59:99
-    var timer by remember { mutableStateOf(Timer()) }
+fun TimerComponent(
+    modifier: Modifier = Modifier,
+    viewModel: TimerViewModel = viewModel()
+) {
+
+    val timeInSec by viewModel.timeInSec.collectAsState()
 
     val playButtonColor = Color(0xff05ac2b)
     val cancelButtonColor = Color(0xffc84011)
     val pauseButtonColor = Color(0xffdea501)
 
-    if (timeInSec == (59 * 60) + 59) {
-        isPlaying = false
-        timer.cancel()
-    }
+
     Row(
         modifier = modifier
             .background(Color.DarkGray, shape = RoundedCornerShape(10.dp))
@@ -66,6 +61,7 @@ fun TimerComponent(modifier: Modifier = Modifier) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
+
         Box {
             Text(
                 formatTime(timeInSec),
@@ -78,37 +74,13 @@ fun TimerComponent(modifier: Modifier = Modifier) {
             )
         }
 
-        PlayButton(color = playButtonColor) {
-            if (isPlaying) {
-                return@PlayButton
-            }
 
-            isPlaying = true
-            timer = Timer()
-            timer.scheduleAtFixedRate(1000L, 1000L) {
-                timeInSec += 1
-            }
-        }
-
-        PauseButton(pauseButtonColor) {
-            if (!isPlaying) {
-                return@PauseButton
-            }
-            isPlaying = false
-            timer.cancel()
-        }
-
-        CancelButton(cancelButtonColor) {
-            if (!isPlaying) {
-                timeInSec = 0
-                return@CancelButton
-            }
-            isPlaying = false
-            timer.cancel()
-            timeInSec = 0
-        }
+        PlayButton(color = playButtonColor, onPlay = viewModel::startTimer)
+        PauseButton(color = pauseButtonColor, onPause = viewModel::pauseTimer)
+        CancelButton(color = cancelButtonColor, onCancel = viewModel::resetTimer)
     }
 }
+
 
 @Composable
 fun TimerButton(
@@ -123,6 +95,7 @@ fun TimerButton(
         colors = ButtonDefaults.buttonColors(containerColor = color),
         modifier = Modifier
             .fillMaxHeight()
+
     ) {
         content()
     }
@@ -145,8 +118,6 @@ fun PlayButton(color: Color, onPlay: () -> Unit) {
 
 
 var _Pause: ImageVector? = null
-
-
 val Pause: ImageVector
     get() {
         if (_Pause != null) {
@@ -180,6 +151,7 @@ val Pause: ImageVector
     }
 
 
+
 @Composable
 fun PauseButton(color: Color, onPause: () -> Unit) {
     TimerButton(
@@ -195,27 +167,17 @@ fun PauseButton(color: Color, onPause: () -> Unit) {
 }
 
 
-fun filledSquareWithBorderImageVector(): ImageVector {
-    return ImageVector.Builder(
-        name = "FilledSquareWithBorder",
-        defaultWidth = 24.dp,
-        defaultHeight = 24.dp,
-        viewportWidth = 24f,
-        viewportHeight = 24f
+val StopIcon: ImageVector by lazy {
+    ImageVector.Builder(
+        name = "StopIcon", defaultWidth = 24.dp, defaultHeight = 24.dp, viewportWidth = 24f, viewportHeight = 24f
     ).apply {
-        path(
-            fill = SolidColor(Color.Blue),
-            stroke = SolidColor(Color.Black),
-            strokeLineWidth = 2f
-        ) {
-            moveTo(4f, 4f)
-            lineTo(20f, 4f)
-            lineTo(20f, 20f)
-            lineTo(4f, 20f)
-            close()
+        path(fill = SolidColor(Color.White)) {
+            val padding = 6f; moveTo(padding, padding); lineTo(24f - padding, padding); lineTo(24f - padding, 24f - padding); lineTo(padding, 24f - padding); close()
         }
     }.build()
 }
+
+
 
 @Composable
 fun CancelButton(color: Color, onCancel: () -> Unit) {
@@ -228,7 +190,7 @@ fun CancelButton(color: Color, onCancel: () -> Unit) {
         )
     ) {
         Icon(
-            imageVector = filledSquareWithBorderImageVector(),
+            imageVector = StopIcon,
             contentDescription = "Cancel",
             tint = Color.White
         )

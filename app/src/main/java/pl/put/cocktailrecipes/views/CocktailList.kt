@@ -42,20 +42,16 @@ import pl.put.cocktailrecipes.models.Item
 
 
 @Composable
-fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, cocktailName: Item) {
+fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, categoryName: Item) {
 
     val cocktailNames = remember {mutableStateOf(emptyList<String>())}
-    val categoryName = remember { mutableStateOf<String>("") }
     val gridState = rememberLazyGridState()
 
-    LaunchedEffect(cocktailName) {
-        val newCategory = CocktailRecipes.getCocktailDetails(cocktailName.name).category
 
-        if (newCategory != categoryName.value) {
-            categoryName.value = newCategory
-            cocktailNames.value = CocktailRecipes.getCocktailNamesByCategory(Item(categoryName.value))
-        }
+    LaunchedEffect(categoryName) {
+        cocktailNames.value = CocktailRecipes.getCocktailNamesByCategory(categoryName)
     }
+
 
 
     LazyVerticalGrid(
@@ -72,10 +68,7 @@ fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, cocktailName: Item
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
 
-        Log.d("cocktail", cocktailNames.toString())
-        Log.d("cocktail", categoryName.value)
         items(cocktailNames.value) { cocktailName ->
-            Log.d("bool", cocktailName)
             CocktailCard(CocktailRecipes.getCocktailDetails(cocktailName), onClick)
         }
     }
