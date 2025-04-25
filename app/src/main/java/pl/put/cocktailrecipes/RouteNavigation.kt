@@ -28,6 +28,7 @@ fun RouteNavigation() {
     val coroutineScope = rememberCoroutineScope()
 
 
+
     LaunchedEffect(navigator.currentDestination) {
         currentPane.value = navigator.currentDestination?.pane
     }

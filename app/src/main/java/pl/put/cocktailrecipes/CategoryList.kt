@@ -37,37 +37,44 @@ import android.util.Log
 fun CategoryList(onClick: (Item) -> Unit, modifier: Modifier){
 
     val categories = remember { mutableStateOf(emptyList<String>()) }
+    val isLoading = remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         CocktailRecipes.init()
+        isLoading.value = false
         categories.value = CocktailRecipes.getCategories()
     }
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(1),
-        modifier = modifier
-            .background(Color(0xffedebe4))
-            .fillMaxSize(0.5f),
-        contentPadding = PaddingValues(
-            top = 50.dp,
-            bottom = 50.dp
-        ),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        items(categories.value.toList(), key = { it }) { cocktailCategory ->
-            CategoryCard(cocktailCategory, onClick)
-        }
+    if (isLoading.value) {
+        Loading()
     }
+    else {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(1),
+            modifier = modifier
+                .background(Color(0xffedebe4))
+                .fillMaxSize(0.5f),
+            contentPadding = PaddingValues(
+                top = 50.dp,
+                bottom = 50.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            items(categories.value.toList(), key = { it }) { cocktailCategory ->
+                CategoryCard(cocktailCategory, onClick)
+            }
+        }
 
-    androidx.compose.foundation.lazy.LazyColumn(modifier = modifier) {
-        items(categories.value.size) { index ->
-            val category = categories.value[index]
-            Text(
-                text = category,
-                modifier = Modifier
-                    .padding(16.dp)
-            )
+        androidx.compose.foundation.lazy.LazyColumn(modifier = modifier) {
+            items(categories.value.size) { index ->
+                val category = categories.value[index]
+                Text(
+                    text = category,
+                    modifier = Modifier
+                        .padding(16.dp)
+                )
+            }
         }
     }
 }
