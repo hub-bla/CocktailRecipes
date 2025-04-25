@@ -1,6 +1,7 @@
 package pl.put.cocktailrecipes
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,11 +18,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +45,9 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
     val cocktail = CocktailRecipes.getCocktailDetails(item.name)
     val scrollState = rememberScrollState()
     val indent = 20.dp
+    val successMessage = remember { mutableStateOf("") }
 
+    Log.d("sucessMesage", successMessage.value)
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -54,9 +61,10 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
                     .fillMaxWidth()
                     .padding(top = 20.dp, bottom = 20.dp)
             ) {
+
                 IconButton(
                     onClick = {
-                            navigateBack()
+                        navigateBack()
 
                     },
                 ) {
@@ -95,12 +103,19 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
                 SectionTitle("Ingredients")
                 Column(modifier = Modifier.fillMaxWidth()) {
                     for ((_, ingredient) in cocktail.ingredients) {
-                        val measure = if (ingredient.measure.isNotEmpty()) " - ${ingredient.measure}" else ""
+                        val measure =
+                            if (ingredient.measure.isNotEmpty()) " - ${ingredient.measure}" else ""
                         Row {
                             Text(text = "\u2022", modifier = Modifier.width(indent))
                             Text("${ingredient.name}$measure")
                         }
                     }
+                }
+                FloatingActionButton(
+                    onClick = { successMessage.value = "Message was sent!" },
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text("Send SMS with ingredients")
                 }
             }
 
@@ -114,6 +129,19 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
                 .align(Alignment.BottomCenter)
                 .offset(y = (-40).dp)
         )
+        if (successMessage.value != "") {
+            SuccessComponent(
+                successMessage.value,
+                3000,
+                {
+                    Log.d("", "Clear sucess message")
+                    successMessage.value = ""
+                },
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .offset(y = 30.dp)
+            )
+        }
     }
 }
 
