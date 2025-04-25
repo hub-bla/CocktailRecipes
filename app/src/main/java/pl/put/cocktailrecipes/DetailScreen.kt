@@ -142,6 +142,7 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
                     .offset(y = 30.dp)
             )
         }
+
     }
 }
 
