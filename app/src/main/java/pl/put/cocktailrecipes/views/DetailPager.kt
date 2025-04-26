@@ -89,9 +89,10 @@ fun CocktailsHorizontalPager(
                     Log.d("", "Clear sucess message")
                     successMessage.value = ""
                 },
-                modifier
+                Modifier
                     .offset(y = 30.dp)
                     .align(Alignment.TopCenter)
+
             )
         }
     }

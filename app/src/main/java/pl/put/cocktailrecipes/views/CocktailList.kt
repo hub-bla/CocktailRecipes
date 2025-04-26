@@ -56,7 +56,6 @@ fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, categoryName: Item
         columns = GridCells.Fixed(1),
         state = gridState,
         modifier = modifier
-            .background(Color(0xffedebe4))
             .fillMaxSize(0.5f),
         contentPadding = PaddingValues(
             top = 50.dp,

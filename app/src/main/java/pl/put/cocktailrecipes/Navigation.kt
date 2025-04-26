@@ -22,6 +22,7 @@ import pl.put.cocktailrecipes.views.CocktailList
 import pl.put.cocktailrecipes.views.DetailScreen
 import pl.put.cocktailrecipes.views.EmptyScreen
 import androidx.compose.ui.platform.LocalConfiguration
+import pl.put.cocktailrecipes.views.CocktailListHorizontalPager
 import pl.put.cocktailrecipes.views.CocktailsHorizontalPager
 
 
@@ -61,7 +62,7 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
                             .weight(1f)
                             .padding(8.dp)
                     ) {
-                        CocktailList(
+                        CocktailListHorizontalPager(
                             categoryName = Item(categoryName),
                             onClick = { cocktail ->
 
@@ -89,10 +90,9 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
                     }
                 }
             } else {
-                CocktailList(
+                CocktailListHorizontalPager(
                     modifier = Modifier.fillMaxSize(),
                     categoryName = Item(categoryName),
-
                     onClick = { cocktail ->
                         navController.navigate("detail/${cocktail.name}")
                     }
@@ -127,7 +127,7 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
                             .weight(1f)
                             .padding(8.dp)
                     ) {
-                        CocktailList(
+                        CocktailListHorizontalPager(
                             categoryName = categoryForList,
 
                             onClick = { cocktail ->
