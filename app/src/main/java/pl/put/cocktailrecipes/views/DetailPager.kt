@@ -31,17 +31,22 @@ import pl.put.cocktailrecipes.utils.TimerComponent
 @Composable
 fun CocktailsHorizontalPager(
     item: Item,
+    setImgSrc: (String) -> Unit,
+    isTablet: Boolean,
     modifier: Modifier
 ) {
     val successMessage = remember { mutableStateOf("") }
-    val cocktail =CocktailRecipes.getCocktailDetails(item.name)
+    val cocktail = CocktailRecipes.getCocktailDetails(item.name)
 
     val items = CocktailRecipes.getCocktailNamesByCategory(Item(cocktail.category))
     val initialPageIdx = items.indexOfFirst { it == item.name }
 
-    val pagerState = androidx.compose.foundation.pager.rememberPagerState(initialPage = initialPageIdx,pageCount = {items.size},)
+    val pagerState = androidx.compose.foundation.pager.rememberPagerState(
+        initialPage = initialPageIdx,
+        pageCount = { items.size },
+    )
 
-    LaunchedEffect (item) {
+    LaunchedEffect(item) {
         val newIdx = items.indexOfFirst { it == item.name }
         pagerState.animateScrollToPage(newIdx)
     }
@@ -54,7 +59,9 @@ fun CocktailsHorizontalPager(
             val currentItem = Item(items[page])
             DetailScreen(
                 item = currentItem,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                setImgSrc = setImgSrc,
+                isTablet = isTablet
             )
         }
 

@@ -30,9 +30,8 @@ fun SuccessComponent(
             delay(delayTimeMs)
             barWidth -= 0.01
         }
-
-
     }
+
     if (barWidth > 0) {
         Box(
             modifier = modifier

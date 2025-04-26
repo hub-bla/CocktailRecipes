@@ -1,7 +1,9 @@
 package pl.put.cocktailrecipes
 
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,10 +28,14 @@ import pl.put.cocktailrecipes.views.CocktailListHorizontalPager
 import pl.put.cocktailrecipes.views.CocktailsHorizontalPager
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) {
+fun ComposeNavigation(
+    navController: NavHostController,
+    padding: PaddingValues,
+    setImgSrc: (String) -> Unit
+) {
     val isTablet = LocalConfiguration.current.screenWidthDp > 600
-
 
     NavHost(
         navController = navController,
@@ -52,6 +58,7 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
 
             LaunchedEffect(categoryName) {
                 cocktailForDetailPane = null
+                setImgSrc("")
             }
 
             if (isTablet) {
@@ -85,7 +92,9 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
                         val itemToShow = cocktailForDetailPane ?: Item(CocktailRecipes.mapCategoryToDrinkName(Item(categoryName)))
                         CocktailsHorizontalPager(
                             item = itemToShow,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            setImgSrc = setImgSrc,
+                            isTablet = true
                         )
                     }
                 }
@@ -113,7 +122,13 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
 
             if (isTablet) {
 
-                var selectedCocktailInList by remember(cocktailName) { mutableStateOf(Item(cocktailName)) }
+                var selectedCocktailInList by remember(cocktailName) {
+                    mutableStateOf(
+                        Item(
+                            cocktailName
+                        )
+                    )
+                }
 
                 LaunchedEffect(cocktailName) {
                     selectedCocktailInList = Item(cocktailName)
@@ -152,14 +167,18 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
                     ) {
                         CocktailsHorizontalPager(
                             item = Item(cocktailName),
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            setImgSrc = setImgSrc,
+                            isTablet = true
                         )
                     }
                 }
             } else {
                 CocktailsHorizontalPager(
                     item = Item(cocktailName),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    setImgSrc = setImgSrc,
+                    isTablet = false
                 )
             }
         }
