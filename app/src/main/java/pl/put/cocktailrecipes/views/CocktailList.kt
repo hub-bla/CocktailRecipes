@@ -47,18 +47,15 @@ fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, categoryName: Item
     val cocktailNames = remember {mutableStateOf(emptyList<String>())}
     val gridState = rememberLazyGridState()
 
-
     LaunchedEffect(categoryName) {
         cocktailNames.value = CocktailRecipes.getCocktailNamesByCategory(categoryName)
     }
-
 
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         state = gridState,
         modifier = modifier
-            .background(Color(0xffedebe4))
             .fillMaxSize(0.5f),
         contentPadding = PaddingValues(
             top = 50.dp,

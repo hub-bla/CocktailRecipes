@@ -24,6 +24,8 @@ import pl.put.cocktailrecipes.views.CocktailList
 import pl.put.cocktailrecipes.views.DetailScreen
 import pl.put.cocktailrecipes.views.EmptyScreen
 import androidx.compose.ui.platform.LocalConfiguration
+import pl.put.cocktailrecipes.views.CocktailListHorizontalPager
+import pl.put.cocktailrecipes.views.CocktailsHorizontalPager
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,7 +69,7 @@ fun ComposeNavigation(
                             .weight(1f)
                             .padding(8.dp)
                     ) {
-                        CocktailList(
+                        CocktailListHorizontalPager(
                             categoryName = Item(categoryName),
                             onClick = { cocktail ->
 
@@ -87,10 +89,8 @@ fun ComposeNavigation(
                             .padding(8.dp)
                     ) {
 
-                        val itemToShow = cocktailForDetailPane ?: Item(
-                            CocktailRecipes.mapCategoryToDrinkName(Item(categoryName))
-                        )
-                        DetailScreen(
+                        val itemToShow = cocktailForDetailPane ?: Item(CocktailRecipes.mapCategoryToDrinkName(Item(categoryName)))
+                        CocktailsHorizontalPager(
                             item = itemToShow,
                             modifier = Modifier.fillMaxSize(),
                             setImgSrc = setImgSrc,
@@ -99,10 +99,9 @@ fun ComposeNavigation(
                     }
                 }
             } else {
-                CocktailList(
+                CocktailListHorizontalPager(
                     modifier = Modifier.fillMaxSize(),
                     categoryName = Item(categoryName),
-
                     onClick = { cocktail ->
                         navController.navigate("detail/${cocktail.name}")
                     }
@@ -143,7 +142,7 @@ fun ComposeNavigation(
                             .weight(1f)
                             .padding(8.dp)
                     ) {
-                        CocktailList(
+                        CocktailListHorizontalPager(
                             categoryName = categoryForList,
 
                             onClick = { cocktail ->
@@ -166,7 +165,7 @@ fun ComposeNavigation(
                             .weight(1f)
                             .padding(8.dp)
                     ) {
-                        DetailScreen(
+                        CocktailsHorizontalPager(
                             item = Item(cocktailName),
                             modifier = Modifier.fillMaxSize(),
                             setImgSrc = setImgSrc,
@@ -175,7 +174,7 @@ fun ComposeNavigation(
                     }
                 }
             } else {
-                DetailScreen(
+                CocktailsHorizontalPager(
                     item = Item(cocktailName),
                     modifier = Modifier.fillMaxSize(),
                     setImgSrc = setImgSrc,
