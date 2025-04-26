@@ -1,4 +1,4 @@
-package pl.put.cocktailrecipes
+package pl.put.cocktailrecipes.utils
 
 
 import androidx.compose.foundation.layout.Box
@@ -72,7 +72,7 @@ fun Loading(setIsDone: () -> Unit, isDataLoading: Boolean) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        // Drawing the glass (first)
+
         AnimatedStrokeDrawing(
             svgPathData = glassSvgPath,
             modifier = Modifier

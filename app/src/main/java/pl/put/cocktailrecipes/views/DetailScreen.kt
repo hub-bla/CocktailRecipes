@@ -1,4 +1,4 @@
-package pl.put.cocktailrecipes
+package pl.put.cocktailrecipes.views
 
 
 import android.util.Log
@@ -18,7 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,16 +38,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import pl.put.cocktailrecipes.api.CocktailRecipes
+import pl.put.cocktailrecipes.models.Item
+import pl.put.cocktailrecipes.utils.SuccessComponent
+import pl.put.cocktailrecipes.utils.TimerComponent
+import androidx.compose.ui.graphics.Color
 
 
 @Composable
-fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
+fun DetailScreen(item: Item, modifier: Modifier) {
     val cocktail = CocktailRecipes.getCocktailDetails(item.name)
     val scrollState = rememberScrollState()
     val indent = 20.dp
     val successMessage = remember { mutableStateOf("") }
 
-    Log.d("sucessMesage", successMessage.value)
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -56,24 +60,6 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
                 .verticalScroll(scrollState)
                 .padding(start = 20.dp, end = 20.dp, bottom = 150.dp)
         ) {
-            Box(
-                modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp, bottom = 20.dp)
-            ) {
-
-                IconButton(
-                    onClick = {
-                        navigateBack()
-
-                    },
-                ) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
-            }
 
             Column(
                 modifier = modifier.padding(bottom = 20.dp),
@@ -111,24 +97,34 @@ fun DetailScreen(item: Item, modifier: Modifier, navigateBack: () -> Unit) {
                         }
                     }
                 }
-                FloatingActionButton(
-                    onClick = { successMessage.value = "Message was sent!" },
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text("Send SMS with ingredients")
-                }
             }
 
             SectionTitle("Instructions", modifier = Modifier)
             Text(cocktail.instructions)
         }
+        Box(modifier = Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                TimerComponent(
+                    modifier = Modifier
+                )
 
-        TimerComponent(
-            Modifier
-                .padding(20.dp)
-                .align(Alignment.BottomCenter)
-                .offset(y = (-40).dp)
-        )
+                FloatingActionButton(
+                    onClick = { successMessage.value = "Message was sent!" }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Send,
+                        contentDescription = "Play",
+                        tint = Color.White
+                    )
+                }
+            }
+        }
         if (successMessage.value != "") {
             SuccessComponent(
                 successMessage.value,

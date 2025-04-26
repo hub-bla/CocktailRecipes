@@ -1,4 +1,4 @@
-package pl.put.cocktailrecipes
+package pl.put.cocktailrecipes.api
 
 import android.util.Log
 import io.ktor.client.engine.android.Android
@@ -7,6 +7,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import pl.put.cocktailrecipes.models.Item
 import kotlin.reflect.full.memberProperties
 
 @Serializable
@@ -103,8 +104,13 @@ fun parseToCocktail(cocktailResponse: CocktailResponse): Cocktail {
             cocktail.thumbImgURL = propertyValue.toString()
         } else if(property.name.contains("strDrink")) {
             cocktail.name = propertyValue.toString()
-        } else if(property.name.contains("strCategory")){
-            cocktail.category = propertyValue.toString()
+        } else if (property.name.contains("strCategory")) {
+            var category = propertyValue.toString()
+            val parts = category.split(" / ")
+            if (parts.isNotEmpty()) {
+                category = parts[0]
+            }
+            cocktail.category = category
         }
     }
 
@@ -125,8 +131,8 @@ object CocktailRecipes {
         }
         isInitialized = true
 
-        for(firstLetter in 'a'..'b'){
-            val response = client.get(COCKTAIL_URL+firstLetter).bodyAsText()
+        for(firstLetter in 'a'..'a'){
+            val response = client.get(COCKTAIL_URL +firstLetter).bodyAsText()
             Log.d("response", response)
             val cocktailsData = json.decodeFromString<CocktailsResponse>(response)
 
