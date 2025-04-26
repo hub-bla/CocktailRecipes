@@ -1,6 +1,7 @@
 package pl.put.cocktailrecipes
 
 import android.util.Log
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -8,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,7 +24,7 @@ fun MainLayout() {
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val isDataLoading = remember { mutableStateOf(true) }
-    var showAnimation = remember { mutableStateOf(true) }
+    val showAnimation = remember { mutableStateOf(true) }
 
 
     LaunchedEffect(Unit) {
