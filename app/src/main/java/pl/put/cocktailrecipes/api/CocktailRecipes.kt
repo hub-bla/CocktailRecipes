@@ -131,7 +131,7 @@ object CocktailRecipes {
         }
         isInitialized = true
 
-        for(firstLetter in 'a'..'a'){
+        for(firstLetter in 'a'..'z'){
             val response = client.get(COCKTAIL_URL +firstLetter).bodyAsText()
             Log.d("response", response)
             val cocktailsData = json.decodeFromString<CocktailsResponse>(response)

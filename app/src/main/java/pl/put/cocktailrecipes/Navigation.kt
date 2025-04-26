@@ -22,6 +22,7 @@ import pl.put.cocktailrecipes.views.CocktailList
 import pl.put.cocktailrecipes.views.DetailScreen
 import pl.put.cocktailrecipes.views.EmptyScreen
 import androidx.compose.ui.platform.LocalConfiguration
+import pl.put.cocktailrecipes.views.CocktailsHorizontalPager
 
 
 @Composable
@@ -81,10 +82,9 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
                     ) {
 
                         val itemToShow = cocktailForDetailPane ?: Item(CocktailRecipes.mapCategoryToDrinkName(Item(categoryName)))
-                        DetailScreen(
+                        CocktailsHorizontalPager(
                             item = itemToShow,
                             modifier = Modifier.fillMaxSize()
-
                         )
                     }
                 }
@@ -150,18 +150,16 @@ fun ComposeNavigation(navController: NavHostController, padding: PaddingValues) 
                             .weight(1f)
                             .padding(8.dp)
                     ) {
-                        DetailScreen(
+                        CocktailsHorizontalPager(
                             item = Item(cocktailName),
                             modifier = Modifier.fillMaxSize()
-
                         )
                     }
                 }
             } else {
-                DetailScreen(
+                CocktailsHorizontalPager(
                     item = Item(cocktailName),
                     modifier = Modifier.fillMaxSize()
-
                 )
             }
         }

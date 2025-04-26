@@ -47,11 +47,9 @@ fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, categoryName: Item
     val cocktailNames = remember {mutableStateOf(emptyList<String>())}
     val gridState = rememberLazyGridState()
 
-
     LaunchedEffect(categoryName) {
         cocktailNames.value = CocktailRecipes.getCocktailNamesByCategory(categoryName)
     }
-
 
 
     LazyVerticalGrid(

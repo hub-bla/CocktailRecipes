@@ -1,7 +1,5 @@
 package pl.put.cocktailrecipes.views
 
-
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,24 +8,17 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -40,9 +31,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import pl.put.cocktailrecipes.api.CocktailRecipes
 import pl.put.cocktailrecipes.models.Item
-import pl.put.cocktailrecipes.utils.SuccessComponent
-import pl.put.cocktailrecipes.utils.TimerComponent
-import androidx.compose.ui.graphics.Color
+
 
 
 @Composable
@@ -50,7 +39,7 @@ fun DetailScreen(item: Item, modifier: Modifier) {
     val cocktail = CocktailRecipes.getCocktailDetails(item.name)
     val scrollState = rememberScrollState()
     val indent = 20.dp
-    val successMessage = remember { mutableStateOf("") }
+
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -59,6 +48,7 @@ fun DetailScreen(item: Item, modifier: Modifier) {
             modifier = Modifier
                 .verticalScroll(scrollState)
                 .padding(start = 20.dp, end = 20.dp, bottom = 150.dp)
+
         ) {
 
             Column(
@@ -101,42 +91,6 @@ fun DetailScreen(item: Item, modifier: Modifier) {
 
             SectionTitle("Instructions", modifier = Modifier)
             Text(cocktail.instructions)
-        }
-        Box(modifier = Modifier.fillMaxSize()) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 20.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                TimerComponent(
-                    modifier = Modifier
-                )
-
-                FloatingActionButton(
-                    onClick = { successMessage.value = "Message was sent!" }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Send,
-                        contentDescription = "Play",
-                        tint = Color.White
-                    )
-                }
-            }
-        }
-        if (successMessage.value != "") {
-            SuccessComponent(
-                successMessage.value,
-                3000,
-                {
-                    Log.d("", "Clear sucess message")
-                    successMessage.value = ""
-                },
-                Modifier
-                    .align(Alignment.TopCenter)
-                    .offset(y = 30.dp)
-            )
         }
     }
 }
