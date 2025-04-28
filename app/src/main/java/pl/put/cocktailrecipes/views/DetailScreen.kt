@@ -88,7 +88,6 @@ fun DetailScreen(
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp) // Setting a specific height for tablet view
                             .clip(MaterialTheme.shapes.medium),
                         contentScale = ContentScale.Crop
                     )
