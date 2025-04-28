@@ -44,7 +44,7 @@ fun ComposeNavigation(
             LaunchedEffect(Unit) {
                 onTitleChange("Cocktail Recipes")
             }
-            WelcomeScreen()
+            WelcomeScreen(onExplore = { navController.navigate("category/"+CocktailRecipes.getRandomCategory()) })
         }
 
         composable(

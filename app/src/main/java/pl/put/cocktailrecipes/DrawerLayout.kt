@@ -2,7 +2,9 @@ package pl.put.cocktailrecipes
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
@@ -26,6 +28,8 @@ import pl.put.cocktailrecipes.api.CocktailRecipes
 fun DrawerLayout(scope: CoroutineScope, drawerState: DrawerState, navController: NavController) {
     val categories = remember { mutableStateOf(emptyList<String>()) }
 
+    val scrollState = rememberScrollState()
+
     LaunchedEffect(Unit) {
         categories.value = CocktailRecipes.getCategories()
     }
@@ -35,6 +39,7 @@ fun DrawerLayout(scope: CoroutineScope, drawerState: DrawerState, navController:
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primaryContainer)
             .padding(horizontal = 16.dp, vertical = 24.dp)
+            .verticalScroll(scrollState)
 
     ) {
 

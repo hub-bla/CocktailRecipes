@@ -34,7 +34,7 @@ fun CocktailListHorizontalPager(
     )
 
     Surface (
-        color = MaterialTheme.colorScheme.background, // lepsze tło
+        color = MaterialTheme.colorScheme.background,
         modifier = modifier.fillMaxSize()
     ) {
         HorizontalPager(

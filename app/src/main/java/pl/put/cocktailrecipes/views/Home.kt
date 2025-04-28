@@ -3,6 +3,10 @@ package pl.put.cocktailrecipes.views
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -19,7 +23,8 @@ import pl.put.cocktailrecipes.R
 
 @Composable
 fun WelcomeScreen(
-    backgroundColor: Color = MaterialTheme.colorScheme.background
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    onExplore: () -> Unit
 ) {
     Surface(
         modifier = Modifier
@@ -58,6 +63,30 @@ fun WelcomeScreen(
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.onBackground
             )
+
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp)
+        ) {
+            FloatingActionButton(
+                onClick = { onExplore() },
+                containerColor = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(20.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.cocktail),
+                    contentDescription = "Explore",
+                    modifier = Modifier.width(88.dp)
+                        .padding(20.dp)
+
+
+                )
+            }
         }
     }
-}
+    }
+
