@@ -1,46 +1,21 @@
 package pl.put.cocktailrecipes
 
 import android.util.Log
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collection.mutableVectorOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.lerp
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -49,7 +24,6 @@ import pl.put.cocktailrecipes.utils.CollapsingToolbar
 import pl.put.cocktailrecipes.utils.Loading
 import pl.put.cocktailrecipes.utils.TopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainLayout() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -64,6 +38,7 @@ fun MainLayout() {
     }
     val collapseOffset = remember { mutableStateOf(0f) }
     val showAnimation = remember { mutableStateOf(true) }
+    val topBarTitle = remember { mutableStateOf("") }
 
     val listState = rememberLazyListState()
     val nestedConnection = remember {
@@ -105,6 +80,7 @@ fun MainLayout() {
     } else {
         ModalNavigationDrawer(
             drawerState = drawerState,
+
             drawerContent = {
                 ModalDrawerSheet {
                     DrawerLayout(
@@ -137,14 +113,16 @@ fun MainLayout() {
                             scope = scope,
                             drawerState = drawerState,
                             modifier = Modifier,
-                            navigateBack = { navController.navigateUp() })
+                            navigateBack = { navController.navigateUp() },
+                            title = topBarTitle.value)
                     }
                 }
             ) { innerPadding ->
                 ComposeNavigation(
                     navController = navController,
                     padding = innerPadding,
-                    setImgSrc = { newSrc -> imgSrc.value = newSrc }
+                    setImgSrc = { newSrc -> imgSrc.value = newSrc},
+                    onTitleChange = {newTitle -> topBarTitle.value = newTitle}
                 )
             }
         }

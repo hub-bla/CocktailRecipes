@@ -16,15 +16,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import pl.put.cocktailrecipes.R
+
 @Composable
-fun EmptyScreen(
+fun WelcomeScreen(
     backgroundColor: Color = MaterialTheme.colorScheme.background
 ) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor),
-        color = Color.Transparent
+        color = backgroundColor
     ) {
         Column(
             modifier = Modifier

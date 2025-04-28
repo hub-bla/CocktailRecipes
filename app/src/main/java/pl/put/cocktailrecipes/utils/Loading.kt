@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.material3.MaterialTheme
 
 import androidx.compose.runtime.*
 
@@ -99,7 +100,7 @@ fun Loading(setIsDone: () -> Unit, isDataLoading: Boolean) {
                 lemonOffsetY,
                 lemonTargetYOffset,
                 lemonAnimationTime,
-                color = Color.Yellow
+                color = Color(0xFF62FF00)
             )
         }
     }
@@ -119,6 +120,7 @@ fun AnimatedStrokeDrawing(
 
     val pathLength = pathMeasure.length
     val animatedProgress = remember { Animatable(0f) }
+    val color = MaterialTheme.colorScheme.onBackground
 
     LaunchedEffect(Unit) {
         animatedProgress.animateTo(
@@ -140,7 +142,7 @@ fun AnimatedStrokeDrawing(
         }) {
             drawPath(
                 path = drawPath,
-                color = Color.Black,
+                color = color,
                 style = Stroke(width = 4f)
             )
         }
@@ -155,7 +157,7 @@ fun AnimatedSVGWithVerticalMove(
     targetOffset: Float,
     durationMillis: Int,
     modifier: Modifier = Modifier,
-    color: Color = Color.Black
+    color: Color = MaterialTheme.colorScheme.onBackground
 ) {
     val path = remember { PathParser().parsePathString(svgPathData).toPath() }
     val offsetX = remember { Animatable(startOffsetX) }
