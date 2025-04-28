@@ -162,6 +162,13 @@ object CocktailRecipes {
             .sorted()
     }
 
+    fun getRandomCategory(): String {
+        return cocktails.values
+            .map { it.category }
+            .toSet()
+            .random()
+    }
+
     fun mapCategoryToDrinkName(category: Item): String{
         return cocktails.values.first { it.category == category.name }.name
 

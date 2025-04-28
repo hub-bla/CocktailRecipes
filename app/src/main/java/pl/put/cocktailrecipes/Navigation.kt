@@ -1,10 +1,6 @@
 package pl.put.cocktailrecipes
 
-
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,20 +16,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import pl.put.cocktailrecipes.api.CocktailRecipes
 import pl.put.cocktailrecipes.models.Item
-import pl.put.cocktailrecipes.views.CocktailList
 import pl.put.cocktailrecipes.views.DetailScreen
-import pl.put.cocktailrecipes.views.EmptyScreen
+import pl.put.cocktailrecipes.views.WelcomeScreen
 import androidx.compose.ui.platform.LocalConfiguration
 import pl.put.cocktailrecipes.views.CocktailListHorizontalPager
-import pl.put.cocktailrecipes.views.CocktailsHorizontalPager
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+
 @Composable
 fun ComposeNavigation(
     navController: NavHostController,
     padding: PaddingValues,
-    setImgSrc: (String) -> Unit
+    setImgSrc: (String) -> Unit,
+    onTitleChange: (String) -> Unit
 ) {
     val isTablet = LocalConfiguration.current.screenWidthDp > 600
 
@@ -45,7 +41,10 @@ fun ComposeNavigation(
             .padding(padding)
     ) {
         composable("home") {
-            EmptyScreen()
+            LaunchedEffect(Unit) {
+                onTitleChange("Cocktail Recipes")
+            }
+            WelcomeScreen(onExplore = { navController.navigate("category/"+CocktailRecipes.getRandomCategory()) })
         }
 
         composable(
@@ -61,13 +60,15 @@ fun ComposeNavigation(
                 setImgSrc("")
             }
 
+
+
             if (isTablet) {
                 Row(modifier = Modifier.fillMaxSize()) {
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(1f)
-                            .padding(8.dp)
+
                     ) {
                         CocktailListHorizontalPager(
                             categoryName = Item(categoryName),
@@ -78,7 +79,8 @@ fun ComposeNavigation(
                             },
                             modifier = Modifier
                                 .fillMaxHeight()
-                                .fillMaxWidth()
+                                .fillMaxWidth(),
+                            onTitleChange = onTitleChange
                         )
                     }
 
@@ -86,11 +88,11 @@ fun ComposeNavigation(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(1f)
-                            .padding(8.dp)
+
                     ) {
 
                         val itemToShow = cocktailForDetailPane ?: Item(CocktailRecipes.mapCategoryToDrinkName(Item(categoryName)))
-                        CocktailsHorizontalPager(
+                        DetailScreen(
                             item = itemToShow,
                             modifier = Modifier.fillMaxSize(),
                             setImgSrc = setImgSrc,
@@ -103,8 +105,10 @@ fun ComposeNavigation(
                     modifier = Modifier.fillMaxSize(),
                     categoryName = Item(categoryName),
                     onClick = { cocktail ->
+                        setImgSrc("")
                         navController.navigate("detail/${cocktail.name}")
-                    }
+                    },
+                    onTitleChange = onTitleChange
                 )
             }
         }
@@ -120,6 +124,7 @@ fun ComposeNavigation(
             }
 
 
+
             if (isTablet) {
 
                 var selectedCocktailInList by remember(cocktailName) {
@@ -132,6 +137,7 @@ fun ComposeNavigation(
 
                 LaunchedEffect(cocktailName) {
                     selectedCocktailInList = Item(cocktailName)
+                    onTitleChange(CocktailRecipes.getCocktailDetails(cocktailName).category)
                 }
 
 
@@ -140,7 +146,6 @@ fun ComposeNavigation(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(1f)
-                            .padding(8.dp)
                     ) {
                         CocktailListHorizontalPager(
                             categoryName = categoryForList,
@@ -155,7 +160,8 @@ fun ComposeNavigation(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .fillMaxHeight()
+                                .fillMaxHeight(),
+                            onTitleChange = onTitleChange
                         )
                     }
 
@@ -163,9 +169,9 @@ fun ComposeNavigation(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(1f)
-                            .padding(8.dp)
+
                     ) {
-                        CocktailsHorizontalPager(
+                        DetailScreen(
                             item = Item(cocktailName),
                             modifier = Modifier.fillMaxSize(),
                             setImgSrc = setImgSrc,
@@ -174,7 +180,12 @@ fun ComposeNavigation(
                     }
                 }
             } else {
-                CocktailsHorizontalPager(
+
+                LaunchedEffect(Unit) {
+                    onTitleChange("")
+                }
+
+                DetailScreen(
                     item = Item(cocktailName),
                     modifier = Modifier.fillMaxSize(),
                     setImgSrc = setImgSrc,

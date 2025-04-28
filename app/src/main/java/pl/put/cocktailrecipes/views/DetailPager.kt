@@ -33,7 +33,8 @@ fun CocktailsHorizontalPager(
     item: Item,
     setImgSrc: (String) -> Unit,
     isTablet: Boolean,
-    modifier: Modifier
+    modifier: Modifier,
+
 ) {
     val successMessage = remember { mutableStateOf("") }
     val cocktail = CocktailRecipes.getCocktailDetails(item.name)
@@ -49,13 +50,17 @@ fun CocktailsHorizontalPager(
     LaunchedEffect(item) {
         val newIdx = items.indexOfFirst { it == item.name }
         pagerState.animateScrollToPage(newIdx)
+
     }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
+
+
             val currentItem = Item(items[page])
             DetailScreen(
                 item = currentItem,

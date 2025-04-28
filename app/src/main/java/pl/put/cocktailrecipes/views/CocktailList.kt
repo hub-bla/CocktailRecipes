@@ -35,6 +35,8 @@ import android.util.Log
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 
 import pl.put.cocktailrecipes.api.Cocktail
 import pl.put.cocktailrecipes.api.CocktailRecipes
@@ -43,14 +45,12 @@ import pl.put.cocktailrecipes.models.Item
 
 @Composable
 fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, categoryName: Item) {
-
-    val cocktailNames = remember {mutableStateOf(emptyList<String>())}
+    val cocktailNames = remember { mutableStateOf(emptyList<String>()) }
     val gridState = rememberLazyGridState()
 
     LaunchedEffect(categoryName) {
         cocktailNames.value = CocktailRecipes.getCocktailNamesByCategory(categoryName)
     }
-
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
@@ -64,7 +64,6 @@ fun CocktailList(onClick: (Item) -> Unit, modifier: Modifier, categoryName: Item
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-
         items(cocktailNames.value) { cocktailName ->
             CocktailCard(CocktailRecipes.getCocktailDetails(cocktailName), onClick)
         }
@@ -82,7 +81,13 @@ fun CocktailCard(cocktail: Cocktail, onClick: (Item) -> Unit) {
         Card(
             onClick = { onClick(Item(cocktail.name)) },
             modifier = Modifier
-                .fillMaxWidth(0.5f)
+                .fillMaxWidth(0.5f),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            shape = MaterialTheme.shapes.medium,
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Column(
                 modifier = Modifier
@@ -96,9 +101,8 @@ fun CocktailCard(cocktail: Cocktail, onClick: (Item) -> Unit) {
                     contentDescription = cocktail.name,
                     modifier = Modifier
                         .aspectRatio(1f)
-                        .clip(RoundedCornerShape(8.dp))
-                        .height(150.dp)
-                        .fillMaxWidth(1f),
+                        .clip(MaterialTheme.shapes.medium)
+                        .fillMaxWidth(),
                     contentScale = ContentScale.Crop
                 )
                 Box(
@@ -107,7 +111,11 @@ fun CocktailCard(cocktail: Cocktail, onClick: (Item) -> Unit) {
                         .fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(cocktail.name, modifier = Modifier)
+                    Text(
+                        text = cocktail.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 }
             }
         }

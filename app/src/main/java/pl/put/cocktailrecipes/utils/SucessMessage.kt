@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,13 +39,16 @@ fun SuccessComponent(
             modifier = modifier
                 .fillMaxWidth(0.7f)
                 .heightIn(min = 75.dp)
-                .background(Color(0xff02a026), shape = RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(16.dp))
         ) {
             Text(
-                text = text, color = Color.White,
+                text = text,
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .align(Alignment.Center)
+                    .padding(horizontal = 16.dp)
             )
             TimeBar(barWidth, modifier = Modifier.align(Alignment.BottomStart))
         }
@@ -58,7 +63,7 @@ fun TimeBar(barWidth: Double, modifier: Modifier = Modifier) {
         modifier = modifier
             .heightIn(5.dp)
             .fillMaxWidth(barWidth.toFloat())
-            .background(Color(0xffedeeed), shape = RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(16.dp))
             .graphicsLayer(alpha = 0.5f)
     ) {
 

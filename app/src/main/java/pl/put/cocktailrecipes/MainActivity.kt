@@ -11,6 +11,10 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.WindowInsetsCompat
 import android.view.WindowInsets
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 
 
 class MainActivity : ComponentActivity() {
@@ -31,8 +35,13 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CocktailRecipesTheme {
-                MainLayout()
+                Surface (
+                    color = MaterialTheme.colorScheme.background
+                ){
+                    MainLayout()
+                }
             }
         }
     }
 }
+
